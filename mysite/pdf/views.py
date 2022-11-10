@@ -1,5 +1,11 @@
 from django.shortcuts import render
 from .models import Profile
+#packages to create pdf from html page:
+import pdfkit
+from django.http import HttpResponse
+from django.template import loader
+import io
+
 
 # Create your views here.
 
@@ -22,4 +28,17 @@ def accept(request):
 
 def resume(request, id):
     user_profile = Profile.objects.get(pk=id)
-    return render(request, "pdf/resume.html", {'user_profile' : user_profile})
+    template = loader.get_template('pdf/resume.html') #empty template, no context --no dynamic data
+    html = template.render({'user_profile' : user_profile}) #passed context to template, stored in variable
+    #define layout of pdf page
+    options = {
+        'page-size':'Letter',
+        'encoding': 'UTF-8',
+    }
+    pdf = pdfkit.from_string(html, False, options)
+    response = HttpResponse(pdf)
+    response['Content-Disposition']='attachment'
+    filename="resume.pdf"
+    
+    return response(pdf, content_type='applications/pdf') 
+    #to be automatically download pdf use this instead of the old     version: render(request, "pdf/resume.html", {'user_profile' : user_profile})
