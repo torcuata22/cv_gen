@@ -12,9 +12,9 @@ def accept(request):
         degree = request.POST.get("degree", "")
         school = request.POST.get("school", "")
         university = request.POST.get("university", "")
-        previous_role = request.POST.get("previous_role", "")
+        previous_work = request.POST.get("previous_work", "")
         skills = request.POST.get("skills", "")
 
-        profile = Profile(name="name", email="email", phone="phone", summary="summary", degree="degree",school="school", university="university", previous_role="previous_role", skills="skills")
+        profile = Profile(name=name, email=email, phone=phone, summary=summary, degree=degree,school=school, university=university, previous_work=previous_work, skills=skills)
         profile.save()
     return render (request, 'pdf/accept.html')
