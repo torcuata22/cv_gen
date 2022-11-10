@@ -36,9 +36,13 @@ def resume(request, id):
         'encoding': 'UTF-8',
     }
     pdf = pdfkit.from_string(html, False, options)
-    response = HttpResponse(pdf)
+    response = HttpResponse(pdf, content_type = 'application/pdf')
     response['Content-Disposition']='attachment'
-    filename="resume.pdf"
+    filename = "resume.pdf"
     
-    return response(pdf, content_type='applications/pdf') 
-    #to be automatically download pdf use this instead of the old     version: render(request, "pdf/resume.html", {'user_profile' : user_profile})
+    return HttpResponse(pdf, content_type='applications/pdf') 
+    #to be automatically download pdf use this instead of the old version: render(request, "pdf/resume.html", {'user_profile' : user_profile})
+
+def list (request):
+    profiles = Profile.objects.all()
+    return render(request, 'pdf/list.html', {'profiles':profiles})
